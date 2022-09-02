@@ -13,3 +13,9 @@ subjects:
 - kind: ServiceAccount
   name: cilium-operator
   namespace: cilium
+- kind: ServiceAccount
+  name: hubble-ui
+  namespace: cilium
+- kind: ServiceAccount
+  name: hubble-relay
+  namespace: cilium

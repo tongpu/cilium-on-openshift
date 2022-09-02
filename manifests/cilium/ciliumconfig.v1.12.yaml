@@ -10,6 +10,12 @@ spec:
     binPath: "/var/lib/cni/bin"
     confPath: "/var/run/multus/cni/net.d"
   prometheus:
-    serviceMonitor: {enabled: false}
+    serviceMonitor:
+      enabled: false
   hubble:
-    tls: {enabled: false}
+    tls:
+      enabled: false
+    relay:
+      enabled: true
+    ui:
+      enabled: true
