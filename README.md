@@ -3,7 +3,7 @@
 The goal of this repository is to deploy Cilium v1.12.0 using the certified
 Cilium operator.
 
-## Create subscription
+## Create Cilium subscription
 
 To deploy Cilium we first need to configure the subscription in the `cilium`
 namespace:
@@ -12,22 +12,15 @@ namespace:
 oc apply -f manifests/cilium-olm
 ```
 
-## Configure Security Context Constraints
-
-The Cilium Helm charts doesn't configure access to the required Security
-Context Constraints so we have to add them manually:
-
-```bash
-oc adm policy add-scc-to-user hostnetwork system:serviceaccount:cilium:cilium-operator
-oc adm policy add-scc-to-user privileged system:serviceaccount:cilium:cilium
-```
-
 ## Deploy Cilium using CiliumConfig
 
-The configuration is taken verbatim from [`cilium/cilium-olm`](https://github.com/cilium/cilium-olm/blob/b89359b654e689becd116c084a464a2574841a28/ciliumconfig.v1.12.yaml)
-and can be deployed using:
+The Cilium configuration is based on the the configuration from
+[`cilium/cilium-olm`](https://github.com/cilium/cilium-olm/blob/b89359b654e689becd116c084a464a2574841a28/ciliumconfig.v1.12.yaml)
+and additionally some ClusterRoleBindings are required to grant the
+ServiceAccounts used by Cilium access to required SecurityContextConstraints,
+because they are not managed by the Cilium Helm chart itself:
 
 ```bash
-oc apply -f manifests/ciliumconfig.v1.12.yaml
+oc apply -f manifests/cilium
 ```
 
