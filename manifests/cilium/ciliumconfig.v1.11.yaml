@@ -7,7 +7,8 @@ spec:
   ipam:
     mode: "cluster-pool"
     operator:
-      clusterPoolIPv4PodCIDR: "10.128.0.0/14"
+      clusterPoolIPv4PodCIDRList:
+        - "10.128.0.0/14"
       clusterPoolIPv4MaskSize: "23"
   nativeRoutingCIDR: "10.128.0.0/14"
   endpointRoutes: {enabled: true}
@@ -18,12 +19,33 @@ spec:
     binPath: "/var/lib/cni/bin"
     confPath: "/var/run/multus/cni/net.d"
   prometheus:
-    serviceMonitor: {enabled: false}
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  operator:
+    prometheus:
+      enabled: true
+      serviceMonitor:
+        enabled: true
   hubble:
     tls:
       enabled: false
+    metrics:
+      enabled:
+        - dns:query;ignoreAAAA
+        - drop
+        - tcp
+        - flow
+        - icmp
+        - http
+      serviceMonitor:
+        enabled: true
     relay:
       enabled: true
+      prometheus:
+        enabled: true
+        serviceMonitor:
+          enabled: true
     ui:
       enabled: true
       ingress:
