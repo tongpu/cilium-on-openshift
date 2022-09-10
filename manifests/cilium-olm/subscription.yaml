@@ -4,7 +4,7 @@ metadata:
   name: cilium
   namespace: cilium
 spec:
-  channel: '1.12'
+  channel: '1.11'
   name: cilium
   source: certified-operators
   sourceNamespace: openshift-marketplace
