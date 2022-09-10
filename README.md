@@ -39,8 +39,13 @@ openshift-install create cluster --dir "${CLUSTER_NAME}"
 A basic Cilium configuration is already deployed using the manifests, but any
 further configuration can now be applied using the CiliumConfig CRD.
 
+To enable Hubble and the Hubble UI we need to patch the `cilium-olm` role
+to also manage Ingress resources. Additionally we need to make sure that
+TCP/4244 is opened on each node from within the cluster. This is required for
+Hubble Relay to connect to each node.
+
 ```bash
-oc patch -n cilium role cilium-olm --patch-file manifests/cilium/cilium-olm-role-patch.yaml
+oc patch -n cilium role cilium-olm --type='json' --patch='[{"op": "add", "path": "/rules/-", "value": {"apiGroups": ["networking.k8s.io"], "resources": ["ingresses"], "verbs": ["*"]}}]'
 oc apply -f manifests/cilium/ciliumconfig.v1.11.yaml
 ```
 
