@@ -1,26 +1,46 @@
 # Cilium deployment on OpenShift
 
-The goal of this repository is to deploy Cilium v1.11 using the certified
-Cilium operator.
+Cilium needs to be deployed during the installation of the OpenShift cluster
+with `openshift-install` to ensure that it is the only CNI plugin present on
+the system. The instructions will guide you through the installation.
 
-## Create Cilium subscription
+The installation guide is based on the [upstream documentation](https://docs.cilium.io/en/v1.11/gettingstarted/k8s-install-openshift-okd/)
+so also consult it if anything is unclear.
 
-To deploy Cilium we first need to configure the subscription in the `cilium`
-namespace:
+## Prepare manifests for openshift-install
 
 ```bash
-oc apply -f manifests/cilium-olm
+# configure variables
+CLUSTER_NAME="cilium-demo"
+cilium_olm_rev="master"
+cilium_version="1.11.7"
+
+# Create install-config.yaml
+openshift-install create install-config --dir "${CLUSTER_NAME}"
+
+# Configure Cilium as the networkType
+sed -i "s/networkType: .*/networkType: Cilium/" "${CLUSTER_NAME}/install-config.yaml"
+
+# Create manifests
+openshift-install create manifests --dir "${CLUSTER_NAME}"
+
+# Copy cilium-olm manifests to the manifests directory
+curl --silent --location --fail --show-error "https://github.com/cilium/cilium-olm/archive/${cilium_olm_rev}.tar.gz" --output /tmp/cilium-olm.tgz
+tar -C /tmp -xf /tmp/cilium-olm.tgz
+cp /tmp/cilium-olm-${cilium_olm_rev}/manifests/cilium.v${cilium_version}/* "${CLUSTER_NAME}/manifests"
+rm -rf -- /tmp/cilium-olm.tgz "/tmp/cilium-olm-${cilium_olm_rev}"
+
+# Deploy the cluster
+openshift-install create cluster --dir "${CLUSTER_NAME}"
 ```
 
-## Deploy Cilium using CiliumConfig
+## Configure Cilium using CiliumConfig
 
-The Cilium configuration is based on the the configuration from
-[`cilium/cilium-olm`](https://github.com/cilium/cilium-olm/blob/b89359b654e689becd116c084a464a2574841a28/ciliumconfig.v1.11.yaml)
-and additionally some ClusterRoleBindings are required to grant the
-ServiceAccounts used by Cilium access to required SecurityContextConstraints,
-because they are not managed by the Cilium Helm chart itself:
+A basic Cilium configuration is already deployed using the manifests, but any
+further configuration can now be applied using the CiliumConfig CRD.
 
 ```bash
-oc apply -f manifests/cilium
+oc patch -n cilium role cilium-olm --patch-file manifests/cilium/cilium-olm-role-patch.yaml
+oc apply -f manifests/cilium/ciliumconfig.v1.11.yaml
 ```
 
