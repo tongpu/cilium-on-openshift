@@ -7,3 +7,5 @@ resources:
 components:
   # Remove Service frontend-external and replace it with Ingress
   - components/ingress
+  # Enable tracing
+  - components/tracing

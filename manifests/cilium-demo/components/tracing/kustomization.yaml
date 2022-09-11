@@ -1,0 +1,136 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+patchesStrategicMerge:
+  # adservice - stats, tracing
+    - |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: adservice
+      spec:
+        template:
+          spec:
+            containers:
+              - name: server
+                env:
+                - name: DISABLE_STATS
+                  $patch: delete
+                - name: DISABLE_TRACING
+                  $patch: delete
+  # checkoutservice - stats, tracing
+    - |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: checkoutservice
+      spec:
+        template:
+          spec:
+            containers:
+              - name: server
+                env:
+                - name: DISABLE_STATS
+                  $patch: delete
+                - name: DISABLE_TRACING
+                  $patch: delete
+  # currencyservice - tracing
+    - |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: currencyservice
+      spec:
+        template:
+          spec:
+            containers:
+              - name: server
+                env:
+                - name: DISABLE_TRACING
+                  $patch: delete
+  # emailservice - tracing
+    - |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: emailservice
+      spec:
+        template:
+          spec:
+            containers:
+              - name: server
+                env:
+                - name: DISABLE_TRACING
+                  $patch: delete
+  # frontend - tracing
+    - |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: frontend
+      spec:
+        template:
+          spec:
+            containers:
+              - name: server
+                env:
+                - name: DISABLE_TRACING
+                  $patch: delete
+  # paymentservice - tracing
+    - |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: paymentservice
+      spec:
+        template:
+          spec:
+            containers:
+              - name: server
+                env:
+                - name: DISABLE_TRACING
+                  $patch: delete
+  # productcatalogservice - stats, tracing
+    - |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: productcatalogservice
+      spec:
+        template:
+          spec:
+            containers:
+              - name: server
+                env:
+                - name: DISABLE_STATS
+                  $patch: delete
+                - name: DISABLE_TRACING
+                  $patch: delete
+  # recommendationservice - tracing
+    - |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: recommendationservice
+      spec:
+        template:
+          spec:
+            containers:
+              - name: server
+                env:
+                - name: DISABLE_TRACING
+                  $patch: delete
+  # shippingservice - stats, tracing
+    - |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: shippingservice
+      spec:
+        template:
+          spec:
+            containers:
+              - name: server
+                env:
+                - name: DISABLE_STATS
+                  $patch: delete
