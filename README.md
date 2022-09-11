@@ -62,7 +62,5 @@ This will deploy the example microservices-demo application to OpenShift:
 oc create namespace cilium-demo
 oc label namespace cilium-demo openshift.io/cluster-logging=true openshift.io/cluster-monitoring=true
 oc adm policy add-scc-to-user anyuid system:serviceaccount:cilium-demo:default
-oc -n cilium-demo apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/v0.3.9/release/kubernetes-manifests.yaml
-oc -n cilium-demo delete service frontend-external
-oc -n cilium-demo apply -f manifests/cilium-demo/frontend-ingress.yaml
+oc -n cilium-demo apply -k manifests/cilium-demo
 ```
