@@ -54,6 +54,14 @@ oc patch -n cilium role cilium-olm --type='json' --patch='[{"op": "add", "path":
 oc apply -f manifests/cilium/ciliumconfig.v1.12.yaml
 ```
 
+## Configure OpenShift Distributed Tracing
+
+The goal is to export Hubble traces to Jaeger.
+
+```bash
+oc apply -f manifests/openshift-distributed-tracing
+```
+
 ## Deploy demo application
 
 This will deploy the example microservices-demo application to OpenShift:
