@@ -29,7 +29,7 @@ spec:
         enabled: true
   hubble:
     tls:
-      enabled: false
+      enabled: true
     metrics:
       enabled:
         - dns:query;ignoreAAAA

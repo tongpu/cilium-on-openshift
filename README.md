@@ -54,9 +54,19 @@ oc patch -n cilium role cilium-olm --type='json' --patch='[{"op": "add", "path":
 oc apply -f manifests/cilium/ciliumconfig.v1.12.yaml
 ```
 
-## Configure OpenShift Distributed Tracing
+## Install OpenShift Distributed Tracing
 
-The goal is to export Hubble traces to Jaeger.
+We're deploying the OpenShift Distributed Tracing operators according to the
+[Red Hat documentation](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.11/html/distributed_tracing/distributed-tracing-installation).
+
+```bash
+oc apply -f manifests/openshift-distributed-tracing
+```
+
+And after that we're deploying Jaeger and OpenTelemetry Collector. Because of
+the way the OpenTelemetry Operator is configuring the labels on the pod and
+selector of the services I had to upload the `hubble-otel` image (`ghcr.io/cilium/hubble-otel/otelcol:v0.1.1`)
+to Docker Hub with the label `latest` to ensure that they match up.
 
 ```bash
 oc apply -f manifests/openshift-distributed-tracing
