@@ -74,11 +74,12 @@ oc apply -f manifests/openshift-distributed-tracing
 
 ## Deploy demo application
 
-This will deploy the example microservices-demo application to OpenShift:
+This will deploy the OpenTelemetry demo application to OpenShift. It will send
+its traces to the OpenTelemtry Collector we've deployed before, where they're
+going to be correlated to the Hubble traces.
 
 ```
 oc create namespace cilium-demo
-oc label namespace cilium-demo openshift.io/cluster-logging=true openshift.io/cluster-monitoring=true
 oc adm policy add-scc-to-user anyuid system:serviceaccount:cilium-demo:default
-oc -n cilium-demo apply -k manifests/cilium-demo
+oc kustomize --enable-helm | oc apply -f -
 ```

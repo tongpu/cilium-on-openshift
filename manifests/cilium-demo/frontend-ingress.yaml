@@ -11,8 +11,8 @@ spec:
       paths:
       - backend:
           service:
-            name: frontend
+            name: cilium-demo-frontend
             port:
-              number: 80
+              name: service
         path: /
         pathType: Prefix

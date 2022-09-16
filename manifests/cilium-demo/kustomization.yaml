@@ -1,11 +1,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-resources:
-  - github.com/GoogleCloudPlatform/microservices-demo/kustomize
+namespace: cilium-demo
 
-components:
-  # Remove Service frontend-external and replace it with Ingress
-  - components/ingress
-  # Enable tracing
-  - components/tracing
+resources:
+  - frontend-ingress.yaml
+
+helmChartInflationGenerator:
+  - chartName: opentelemetry-demo
+    chartRepoUrl: https://open-telemetry.github.io/opentelemetry-helm-charts
+    chartVersion: 0.2.5
+    releaseName: cilium-demo
+    values: opentelemetry-demo-values.yaml
